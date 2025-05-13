@@ -1,0 +1,31 @@
+/* src/pages/Login.css & Register.css */
+.auth-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding-top: 5%;
+  }
+  
+  .auth-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+  .auth-button {
+    margin-top: 20px;
+  }
+  
+  
+  .error-message {
+    color: var(--ion-color-danger);
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .auth-footer {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
