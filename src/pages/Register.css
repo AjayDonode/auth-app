@@ -28,4 +28,24 @@
     text-align: center;
     margin-top: 20px;
   }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align text to the left */
+    padding: 10px;
+    background-color: #f8d7da; /* Light red background */
+    border: 1px solid #f5c6cb; /* Border matching the background */
+    border-radius: 5px;
+  }
+  
+  .error-icon {
+    font-size: 20px;
+    margin-right: 10px; /* Space between the icon and the text */
+  }
+  
+  .error-text {
+    font-size: 16px;
+    text-align: left; /* Align text to the left */
+  }
   

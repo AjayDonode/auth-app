@@ -32,7 +32,20 @@ const Login = () => {
     const handleLogin = async () => {
         setLoading(true);
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const result = await signInWithEmailAndPassword(auth, email, password);
+            console.log("result " + result)
+            // Fetch user data after social login
+            const user = result.user;
+            if (user) {
+                const userDetails = {
+                    name: user.displayName || "Anonymous User",
+                    email: user.email,
+                    avatar: user.photoURL || "https://via.placeholder.com/100",
+                };
+                console.log("User details:", userDetails);
+                // You can store this data in state or context
+            }
+
             history.push('/home');
         } catch (err) {
             setError('Failed to login. Please check your credentials.');
@@ -44,7 +57,18 @@ const Login = () => {
     const handleSocialLogin = async (provider: any) => {
         setLoading(true);
         try {
-            await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth, provider);
+            // Fetch user data after social login
+            const user = result.user;
+            if (user) {
+                const userDetails = {
+                    name: user.displayName || "Anonymous User",
+                    email: user.email,
+                    avatar: user.photoURL || "https://via.placeholder.com/100",
+                };
+                console.log("User details:", userDetails);
+                // You can store this data in state or context
+            }
             history.push('/home');
         } catch (err) {
             setError(`Login failed. Please try again.`);
@@ -59,7 +83,7 @@ const Login = () => {
             <IonHeader>
                 <IonToolbar>
                     <IonTitle className="ion-text-center" style={{ color: '#ff385c', fontWeight: 'bold' }}>
-                        SearchWork
+                        Do it To
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>

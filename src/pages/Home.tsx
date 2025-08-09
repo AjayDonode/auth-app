@@ -1,12 +1,36 @@
 import React, { useState } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonSearchbar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonPopover, IonList, IonItem, IonLabel, IonModal, IonCard, IonImg, IonCardContent } from '@ionic/react';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonSearchbar,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonIcon,
+  IonMenu,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonCard,
+  IonImg,
+  IonCardContent,
+  IonAvatar,
+  IonMenuToggle,
+  IonMenuButton,
+} from '@ionic/react';
 import { locationOutline, calendarOutline, personOutline, personCircleOutline } from 'ionicons/icons';
 import './Home.css';
 import { useHistory } from 'react-router';
 import ModalHelperDetails from './modals/ModalHelperDetails';
+import { useAuth } from '../context/AuthContext';
+import { getAuth, signOut } from 'firebase/auth';
 
 const Home: React.FC = () => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const { currentUser } = useAuth(); // Access user data from AuthContext
   const history = useHistory();
 
   const [selectedHelper, setSelectedHelper] = useState<any>(null);
@@ -20,134 +44,163 @@ const Home: React.FC = () => {
     info: "This is some detailed info about the helper. They are experienced and friendly!",
     reviews: [
       { user: "Alice", comment: "Very helpful!", rating: 5 },
-      { user: "Bob", comment: "Would recommend.", rating: 4 }
-    ]
+      { user: "Bob", comment: "Would recommend.", rating: 4 },
+    ],
   }));
 
-
-  function navigateToPage(link: string): void {
-    setIsPopoverOpen(false)
+  const navigateToPage = (link: string): void => {
     history.push('/' + link);
-  }
+  };
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+
+    try {
+      await signOut(auth); // Clears the user session
+      navigateToPage('login'); // Redirects to the login page
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle className="ion-text-center" style={{ color: '#ff385c', fontWeight: 'bold' }}>
-            SearchWork
-          </IonTitle>
-
-          <div slot="end" className="header-buttons">
-            <IonButton className="offer-help-button" shape="round" fill="outline" color="dark"
-              onClick={() => navigateToPage('register')}>
-              Offer Help
-            </IonButton>
-            <IonButton
-              className="user-button"
-              id="user-popover"
-              fill="clear"
-              onClick={() => setIsPopoverOpen(true)}
-            >
-              <IonIcon icon={personCircleOutline} size="large" />
-            </IonButton>
-            <IonPopover
-              trigger="user-popover"
-              isOpen={isPopoverOpen}
-              onDidDismiss={() => setIsPopoverOpen(false)}
-            >
-              <IonContent class="ion-padding">
-                <IonList>
+    <>
+      {/* IonMenu Component */}
+      <IonMenu contentId="main-content" side="start">
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Menu</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+            {currentUser ? (
+              <>
+                <IonItem>
+                  <IonAvatar slot="start">
+                    <img
+                      src={currentUser.photoURL || 'https://www.gravatar.com/avatar?d=mp'}
+                      alt="User Avatar"
+                    />
+                  </IonAvatar>
+                  <IonLabel>
+                    Welcome, {currentUser.displayName || currentUser.email}
+                  </IonLabel>
+                </IonItem>
+                <IonMenuToggle autoHide={false}>
+                  <IonItem button onClick={() => navigateToPage('profile')}>
+                    <IonLabel>Profile</IonLabel>
+                  </IonItem>
+                  <IonItem button onClick={() => navigateToPage('settings')}>
+                    <IonLabel>Settings</IonLabel>
+                  </IonItem>
+                  <IonItem button onClick={handleLogout}>
+                    <IonLabel>Logout</IonLabel>
+                  </IonItem>
+                </IonMenuToggle>
+              </>
+            ) : (
+              <>
+                <IonItem>
+                  <IonAvatar slot="start">
+                    <img src="https://www.gravatar.com/avatar?d=mp" alt="Guest Avatar" />
+                  </IonAvatar>
+                  <IonLabel>Welcome, Guest!</IonLabel>
+                </IonItem>
+                <IonMenuToggle autoHide={false}>
                   <IonItem button onClick={() => navigateToPage('login')}>
                     <IonLabel>Login</IonLabel>
                   </IonItem>
-                  <IonItem button onClick={() => setIsPopoverOpen(false)}>
+                  <IonItem button onClick={() => navigateToPage('register')}>
                     <IonLabel>Sign Up</IonLabel>
                   </IonItem>
-                  <IonItem button onClick={() => setIsPopoverOpen(false)}>
-                    <IonLabel>Profile</IonLabel>
-                  </IonItem>
-                  <IonItem button onClick={() => setIsPopoverOpen(false)}>
-                    <IonLabel>Settings</IonLabel>
-                  </IonItem>
-                  <IonItem button onClick={() => setIsPopoverOpen(false)}>
-                    <IonLabel>Logout</IonLabel>
-                  </IonItem>
-                </IonList>
-              </IonContent>
-            </IonPopover>
-          </div>
+                </IonMenuToggle>
+              </>
+            )}
+          </IonList>
+        </IonContent>
+      </IonMenu>
 
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent fullscreen className="ion-padding">
-        <div className="hero-section">
-          <h1>Get help</h1>
-          <p>Search people who can help</p>
-        </div>
-
-        <div className="search-container">
-          <IonGrid className="search-grid">
-            <IonRow className="search-row">
-              <IonCol size="12" sizeMd="4" className="search-col">
-                <div className="search-field">
-                  <IonIcon icon={personOutline} className="search-icon" />
-                  <IonSearchbar placeholder="What is your project" className="custom-searchbar" />
-                </div>
-              </IonCol>
-              <IonCol size="12" sizeMd="2.5" className="search-col">
-                <div className="search-field">
-                  <IonIcon icon={calendarOutline} className="search-icon" />
-                  <IonSearchbar placeholder="Start date" className="custom-searchbar" />
-                </div>
-              </IonCol>
-              <IonCol size="12" sizeMd="2.5" className="search-col">
-                <div className="search-field">
-                  <IonIcon icon={calendarOutline} className="search-icon" />
-                  <IonSearchbar placeholder="Check-out" className="custom-searchbar" />
-                </div>
-              </IonCol>
-              <IonCol size="12" sizeMd="3" className="search-col search-button-col">
-                <IonButton expand="block" color="danger" className="search-button">
-                  Search
-                </IonButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </div>
-
-
-        <div className="card-section">
-          <h2>Popular Helpers</h2>
-          <div className="helper-grid">
-            {helpers.map((helper) => (
-              <IonCard
-                className="helper-card"
-                key={helper.id}
-                button
-                onClick={() => {
-                  setSelectedHelper(helper);
-                  setIsModalOpen(true);
-                }}
+      {/* Main Content */}
+      <IonPage id="main-content">
+        <IonHeader>
+          <IonToolbar>
+            {/* Add Menu Button */}
+            <IonMenuButton slot="start" />
+            <IonTitle className="ion-text-center" style={{ color: '#ff385c', fontWeight: 'bold' }}>
+              Do it To
+            </IonTitle>
+            <div slot="end" className="header-buttons">
+              <IonButton
+                className="offer-help-button"
+                shape="round"
+                fill="outline"
+                color="dark"
+                onClick={() => navigateToPage('register')}
               >
-                <IonImg src={helper.avatar} alt="Helper" className="card-img" />
-                <IonCardContent className="card-body">
-                  <h3>{helper.name}</h3>
-                  <p>{helper.info.slice(0, 40)}...</p>
-                </IonCardContent>
-              </IonCard>
-            ))}
-          </div>
-        </div>
+                Offer Help
+              </IonButton>
+            </div>
+          </IonToolbar>
+        </IonHeader>
 
-        <ModalHelperDetails
-          isOpen={isModalOpen}
-          onDidDismiss={() => setIsModalOpen(false)}
-          helper={selectedHelper}
-        />
-      </IonContent>
-    </IonPage>
+        <IonContent fullscreen className="ion-padding">
+          <div className="hero-section">
+            <h1>What are you planning to finish ?</h1>
+            <p>Lets search people who can help</p>
+          </div>
+
+          <div className="search-container">
+            <IonGrid className="search-grid">
+              <IonRow className="search-row">
+                <IonCol size="12" className="search-col">
+                  <div className="search-field">
+                    <IonIcon icon={personOutline} className="search-icon" />
+                    <IonSearchbar
+                      placeholder="Write us about your project, expected timings with your zipcode"
+                      className="custom-searchbar extended-searchbar"
+                    />
+                    <IonButton color="danger" className="search-button">
+                      Search
+                    </IonButton>
+                  </div>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
+
+
+          <div className="card-section">
+            <h2>Popular Helpers</h2>
+            <div className="helper-grid">
+              {helpers.map((helper) => (
+                <IonCard
+                  className="helper-card"
+                  key={helper.id}
+                  button
+                  onClick={() => {
+                    setSelectedHelper(helper);
+                    setIsModalOpen(true);
+                  }}
+                >
+                  <IonImg src={helper.avatar} alt="Helper" className="card-img" />
+                  <IonCardContent className="card-body">
+                    <h3>{helper.name}</h3>
+                    <p>{helper.info.slice(0, 40)}...</p>
+                  </IonCardContent>
+                </IonCard>
+              ))}
+            </div>
+          </div>
+
+          <ModalHelperDetails
+            isOpen={isModalOpen}
+            onDidDismiss={() => setIsModalOpen(false)}
+            helper={selectedHelper}
+          />
+        </IonContent>
+      </IonPage>
+    </>
   );
 };
 
