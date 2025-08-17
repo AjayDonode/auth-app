@@ -75,6 +75,45 @@
     font-weight: bold;
     border-radius: 25px;
   }
+
+  .menu-header {
+    font-size: 1rem;
+    background-color: #f8f8f8;
+    padding: 2rem;
+  }
+  
+  .menu-user-info {
+    margin-top: 1rem; 
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+  }
+  
+  .menu-welcome {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .menu-follow-info {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .menu-follow-item {
+    text-align: left;
+  }
+  
+  .menu-follow-count {
+    font-weight: italic;
+    font-size: 1rem;
+    margin-top: 0.2rem; /* Adds spacing between the label and count */
+  }
+  .menu-follow-label {
+    font-size: 0.9rem;
+    color: #888;
+    display: block; /* Ensures the label is displayed above or below the count */
+  }
   
   /* Responsive adjustments for smaller screens */
   @media (max-width: 768px) {

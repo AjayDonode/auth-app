@@ -68,26 +68,55 @@ const Home: React.FC = () => {
       {/* IonMenu Component */}
       <IonMenu contentId="main-content" side="start">
         <IonHeader>
-          <IonToolbar>
-            <IonTitle>Menu</IonTitle>
+          <IonToolbar className="menu-header">
+            {currentUser ? (
+              <>
+                <IonAvatar slot="start">
+                  <img
+                    src={currentUser.photoURL || 'https://www.gravatar.com/avatar?d=mp'}
+                    alt="User Avatar"
+                  />
+                </IonAvatar>
+                <div className="menu-user-info">
+                  <IonLabel className="menu-welcome">
+                    {currentUser.displayName || currentUser.email}
+                  </IonLabel>
+                  <IonLabel className="menu-email">
+                    {currentUser.email}
+                  </IonLabel>
+                  <div className="menu-follow-info">
+                    <div className="menu-follow-item">
+                      <label className="menu-follow-label">Following</label>
+                      <span className="menu-follow-count">1553</span>
+                    </div>
+                    <div className="menu-follow-item">
+                      <label className="menu-follow-label">Followers</label>
+                      <span className="menu-follow-count">537</span>
+                    </div>
+                  </div>
+                </div>
+                
+              </>
+            ) : (
+              <>
+                <IonItem>
+                  <IonAvatar slot="start">
+                    <img src="https://www.gravatar.com/avatar?d=mp" alt="Guest Avatar" />
+                  </IonAvatar>
+                  <IonLabel className="menu-welcome">Welcome, Guest!</IonLabel>
+                </IonItem>
+              </>
+            )}
           </IonToolbar>
         </IonHeader>
         <IonContent>
           <IonList>
             {currentUser ? (
               <>
-                <IonItem>
-                  <IonAvatar slot="start">
-                    <img
-                      src={currentUser.photoURL || 'https://www.gravatar.com/avatar?d=mp'}
-                      alt="User Avatar"
-                    />
-                  </IonAvatar>
-                  <IonLabel>
-                    Welcome, {currentUser.displayName || currentUser.email}
-                  </IonLabel>
-                </IonItem>
                 <IonMenuToggle autoHide={false}>
+                  <IonItem button onClick={() => navigateToPage('mycards')}>
+                    <IonLabel>My Cards</IonLabel>
+                  </IonItem>
                   <IonItem button onClick={() => navigateToPage('profile')}>
                     <IonLabel>Profile</IonLabel>
                   </IonItem>
@@ -130,17 +159,21 @@ const Home: React.FC = () => {
             <IonTitle className="ion-text-center" style={{ color: '#ff385c', fontWeight: 'bold' }}>
               Do it To
             </IonTitle>
-            <div slot="end" className="header-buttons">
-              <IonButton
-                className="offer-help-button"
-                shape="round"
-                fill="outline"
-                color="dark"
-                onClick={() => navigateToPage('register')}
-              >
-                Offer Help
-              </IonButton>
-            </div>
+            {/* Display button if user is not logged in */}
+            {!currentUser && (
+              <div slot="end" className="header-buttons">
+                <IonButton
+                  className="offer-help-button"
+                  shape="round"
+                  fill="outline"
+                  color="dark"
+                  onClick={() => navigateToPage('register')}
+                >
+                  Sign in
+                </IonButton>
+              </div>
+            )}
+
           </IonToolbar>
         </IonHeader>
 

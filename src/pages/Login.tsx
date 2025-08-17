@@ -1,4 +1,3 @@
-// src/pages/Login.tsx
 import {
     IonButton,
     IonContent,
@@ -7,13 +6,10 @@ import {
     IonLabel,
     IonPage,
     IonText,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonIcon,
     IonHeader,
     IonToolbar,
-    IonTitle
+    IonTitle,
+    IonIcon,
 } from '@ionic/react';
 import { logoGoogle, logoFacebook } from 'ionicons/icons';
 import { FacebookAuthProvider, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
@@ -33,20 +29,10 @@ const Login = () => {
         setLoading(true);
         try {
             const result = await signInWithEmailAndPassword(auth, email, password);
-            console.log("result " + result)
-            // Fetch user data after social login
             const user = result.user;
             if (user) {
-                const userDetails = {
-                    name: user.displayName || "Anonymous User",
-                    email: user.email,
-                    avatar: user.photoURL || "https://via.placeholder.com/100",
-                };
-                console.log("User details:", userDetails);
-                // You can store this data in state or context
+                history.push('/home');
             }
-
-            history.push('/home');
         } catch (err) {
             setError('Failed to login. Please check your credentials.');
         } finally {
@@ -58,21 +44,12 @@ const Login = () => {
         setLoading(true);
         try {
             const result = await signInWithPopup(auth, provider);
-            // Fetch user data after social login
             const user = result.user;
             if (user) {
-                const userDetails = {
-                    name: user.displayName || "Anonymous User",
-                    email: user.email,
-                    avatar: user.photoURL || "https://via.placeholder.com/100",
-                };
-                console.log("User details:", userDetails);
-                // You can store this data in state or context
+                history.push('/home');
             }
-            history.push('/home');
         } catch (err) {
-            setError(`Login failed. Please try again.`);
-            console.error('Auth error:', err);
+            setError('Login failed. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -88,8 +65,8 @@ const Login = () => {
                 </IonToolbar>
             </IonHeader>
 
-            <IonContent className="ion-padding">
-                <div className="auth-container auth-card">
+            <IonContent className="login-content">
+                <div className="auth-card">
                     <div className="auth-header">
                         <IonText color="primary">
                             <h1 className="ion-text-center">Sign in</h1>
@@ -104,19 +81,22 @@ const Login = () => {
                     )}
 
                     <div className="form-group">
-                        <IonItem className="custom-input">
-                            <IonLabel position="floating">Email</IonLabel>
-                            <IonInput
+                        <IonItem>
+                            {/* <IonLabel position="floating">Email</IonLabel> */}
+                            <IonInput label="Email" 
                                 type="email"
+                                labelPlacement="floating" placeholder="Enter email"
                                 value={email}
                                 onIonChange={(e) => setEmail(e.detail.value!)}
                             />
                         </IonItem>
 
-                        <IonItem className="custom-input">
-                            <IonLabel position="floating">Password</IonLabel>
-                            <IonInput
+                        <IonItem >
+                            {/* <IonLabel position="floating">Password</IonLabel> */}
+                            <IonInput 
+                                label="Password" 
                                 type="password"
+                                 labelPlacement="floating" placeholder="Enter password"
                                 value={password}
                                 onIonChange={(e) => setPassword(e.detail.value!)}
                             />
@@ -167,10 +147,6 @@ const Login = () => {
                         </p>
                     </div>
                 </div>
-                {/* </IonCol> */}
-                {/* </IonRow> */}
-                {/* </IonGrid> */}
-                {/* </div> */}
             </IonContent>
         </IonPage>
     );

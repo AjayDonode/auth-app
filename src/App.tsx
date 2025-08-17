@@ -7,8 +7,8 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useHistory, useLocation } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
+import MyCards from './pages/myCards/MyCards';
 
 setupIonicReact();
 
@@ -40,6 +40,7 @@ const App: React.FC = () => {
             <Route exact path="/" render={() => <Redirect to="/login" />} />
             <Route exact path="/home" component={Home} />
             <Route exact path="/profile" component={Profile} />
+            <Route exact path="/mycards" component={MyCards} />
           </IonRouterOutlet>
         </IonReactRouter>
       </AuthProvider>
